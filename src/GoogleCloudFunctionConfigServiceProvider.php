@@ -1,11 +1,11 @@
 <?php
 
-namespace Rverrips\LaravelGoogleCloudFunctionConfig;
+namespace Bombozama\LaravelGoogleCloudFunctionConfig;
 
-use RuntimeException;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
+use RuntimeException;
 
 class GoogleCloudFunctionConfigServiceProvider extends ServiceProvider
 {
@@ -25,7 +25,7 @@ class GoogleCloudFunctionConfigServiceProvider extends ServiceProvider
         }
 
         // The rest below is specific to the Google Cloud Function environment
-        if (! $isRunningGoogleCloudFunction) {
+        if (!$isRunningGoogleCloudFunction) {
             return;
         }
 
@@ -52,11 +52,10 @@ class GoogleCloudFunctionConfigServiceProvider extends ServiceProvider
         // If you don't we'll generate a new one with each runtime which is not desirable.
         $key = Config::get('app.key');
         if ($key === null) {
-            Config::set('app.key', 'base64:'.base64_encode(
+            Config::set('app.key', 'base64:' . base64_encode(
                 Encrypter::generateKey(Config::get('config.app.cipher'))
             ));
         }
-
 
         // The native Laravel storage directory is read-only, we move the cache to /tmp
         // to avoid errors. If you want to actively use the cache, it will be best to use
@@ -79,15 +78,15 @@ class GoogleCloudFunctionConfigServiceProvider extends ServiceProvider
         }
 
         // Make sure the declared view.compiled is a string
-        if (! is_string($compiledViewDirectory)) {
+        if (!is_string($compiledViewDirectory)) {
             throw new RuntimeException('Configuration `view.compiled` must be a valid string');
         }
 
         // Make sure the directory for compiled views exist
-        if (! is_dir($compiledViewDirectory)) {
+        if (!is_dir($compiledViewDirectory)) {
             // The directory doesn't exist: let's create it, else Laravel will not create it automatically
             // and will fail with an error
-            if (! mkdir($compiledViewDirectory, 0755, true) && ! is_dir($compiledViewDirectory)) {
+            if (!mkdir($compiledViewDirectory, 0755, true) && !is_dir($compiledViewDirectory)) {
                 throw new RuntimeException(sprintf('Directory "%s" cannot be created', $compiledViewDirectory));
             }
         }
